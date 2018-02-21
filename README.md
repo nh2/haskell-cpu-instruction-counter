@@ -38,3 +38,12 @@ main = do
     then error $ "sum [1..10000] performance regressed; took " ++ show sumInstrs ++ " instructions"
     else putStrLn $ "sum [1..10000] performance OK; took " ++ show sumInstrs ++ " instructions"
 ```
+
+
+## Root permissions
+
+`perf_event_open()` might be restricted on your system. If `cat /proc/sys/kernel/perf_event_paranoid` shows a number greater than `2`, you'll need `sudo` to run the above examples.
+
+Alternatively, run `echo 2 | sudo tee /proc/sys/kernel/perf_event_paranoid`.
+
+On CI systems under your control and many public CI services, there should be no barriers to root access so this should not be a showstopper to using this approach for performance regression tests.
