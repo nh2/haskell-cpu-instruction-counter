@@ -1,0 +1,51 @@
+name:              cpu-instruction-counter
+version:           0.1.0.0
+build-type:        Simple
+cabal-version:     >= 1.8
+category:          System
+author:            Niklas Hambüchen <niklas@fpcomplete.com>
+maintainer:        Niklas Hambüchen <niklas@fpcomplete.com>
+homepage:          https://github.com/nh2/haskell-cpu-instruction-counter
+bug-reports:       https://github.com/nh2/haskell-cpu-instruction-counter/issues
+synopsis:          Measuring CPU instructions
+description:       Measuring CPU instructions using Linux Performance Counters / perf_event_open().
+license:           MIT
+license-file:      LICENSE
+
+extra-source-files:
+  cbits/linux/perfcounters.h
+  cbits/linux/perfcounters.c
+
+source-repository head
+  type:      git
+  location:  git://github.com/nh2/haskell-cpu-instruction-counter.git
+
+library
+  exposed-modules: System.CPUInstructionCounter
+  build-depends:
+      base < 5
+    , unliftio
+    , unliftio-core
+
+  include-dirs:     cbits/linux
+  includes:         perfcounters.h
+  install-includes: perfcounters.h
+  c-sources:        cbits/linux/perfcounters.c
+
+  ghc-options:   -Wall -optc-std=c99 -optc-Wall -optc-Wextra
+  cc-options:    -std=c99 -Wall -Wextra
+
+  if os(linux)
+    buildable: True
+  else
+    buildable: False
+
+
+test-suite tests
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        Main.hs
+  ghc-options:    -Wall
+  build-depends:
+      base
+    , cpu-instruction-counter
