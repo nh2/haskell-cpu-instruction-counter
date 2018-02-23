@@ -38,11 +38,11 @@ module System.CPUInstructionCounter
   , c_finish_instruction_counter
   ) where
 
-import           Control.Monad.IO.Unlift (MonadUnliftIO, liftIO)
+import           Control.Exception (Exception, bracket, throwIO)
+import           Control.Monad.IO.Unlift (MonadUnliftIO, withRunInIO, liftIO)
 import           Foreign (Int64)
 import           Foreign.C.Error (throwErrnoIfMinus1_, throwErrnoIfMinus1Retry, throwErrnoIfMinus1Retry_)
 import           Foreign.C.Types (CInt(..), CLLong(..))
-import           UnliftIO.Exception (Exception, bracket, throwIO)
 
 
 -- | Exception to be thrown when `finishInstructionCounter` does an unexpected
@@ -107,12 +107,12 @@ perfEventClose fd =
 --
 -- This function is async-exception-safe.
 withInstructionsCounted :: (MonadUnliftIO m) => m a -> m (a, Int64)
-withInstructionsCounted f = do
+withInstructionsCounted f = withRunInIO $ \runInIO -> do
   bracket
     (liftIO perfEventOpenHwInstructions)
     (\fd -> liftIO $ perfEventClose fd)
     $ \fd -> do
       liftIO $ startInstructionCounter fd
-      x <- f
+      x <- runInIO f
       numInstrs <- liftIO $ finishInstructionCounter fd
       return (x, fromIntegral numInstrs)

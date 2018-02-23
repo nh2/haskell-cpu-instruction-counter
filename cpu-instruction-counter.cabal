@@ -24,7 +24,6 @@ library
   exposed-modules: System.CPUInstructionCounter
   build-depends:
       base < 5
-    , unliftio
     , unliftio-core
 
   include-dirs:     cbits/linux
