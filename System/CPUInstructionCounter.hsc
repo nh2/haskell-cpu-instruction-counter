@@ -1,4 +1,4 @@
-{-# LANGUAGE ForeignFunctionInterface #-}
+{-# LANGUAGE ForeignFunctionInterface, DeriveDataTypeable #-}
 
 #include "perfcounters.h"
 
@@ -40,6 +40,7 @@ module System.CPUInstructionCounter
 
 import           Control.Exception (Exception, bracket, throwIO)
 import           Control.Monad.IO.Unlift (MonadUnliftIO, withRunInIO, liftIO)
+import           Data.Typeable (Typeable)
 import           Foreign (Int64)
 import           Foreign.C.Error (throwErrnoIfMinus1_, throwErrnoIfMinus1Retry, throwErrnoIfMinus1Retry_)
 import           Foreign.C.Types (CInt(..), CLLong(..))
@@ -48,7 +49,7 @@ import           Foreign.C.Types (CInt(..), CLLong(..))
 -- | Exception to be thrown when `finishInstructionCounter` does an unexpected
 -- short read. This should never happen.
 data PerfEventShortReadException = PerfEventShortReadException
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Typeable)
 
 instance Exception PerfEventShortReadException
 
