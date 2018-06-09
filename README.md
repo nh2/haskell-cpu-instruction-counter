@@ -40,6 +40,15 @@ main = do
 ```
 
 
+## Concurrency warning
+
+You will likely not get accurate results when you use `perf_event_open()` in concurrent (e.g. from multiple Haskell threads). See also https://github.com/nh2/haskell-cpu-instruction-counter/issues/4.
+
+You are therefore advised to:
+
+* Disable parallel test running in your testing framework for tests that use CPU counting
+
+
 ## Root permissions
 
 `perf_event_open()` might be restricted on your system. If `cat /proc/sys/kernel/perf_event_paranoid` shows a number greater than `2`, you'll need `sudo` to run the above examples.
