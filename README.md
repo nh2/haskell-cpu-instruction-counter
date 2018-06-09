@@ -46,6 +46,6 @@ main = do
 
 Alternatively, run `echo 2 | sudo tee /proc/sys/kernel/perf_event_paranoid`.
 
-By default `perf_event_paranoid` is set to `2` since Linux 4.6 (and before that the default was `1`). Unless your distribution configures it differently you are fine.
+By default `perf_event_paranoid` is set to `2` since Linux 4.6 (and before that the default was `1`). Unless your distribution configures it differently you are fine. Ubuntu [is known](https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1612790) to change this setting to `3`.
 
 On CI systems under your control and many public CI services, there should be no barriers to root access so this should not be a showstopper to using this approach for performance regression tests.
